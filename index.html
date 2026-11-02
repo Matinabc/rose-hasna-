@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ببخشید حسنا جونم</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    html {
+      min-height: 100%;
+      background: #100710;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      overflow-x: hidden;
+      overflow-y: auto;
+      background: radial-gradient(circle at 50% 42%, #5b172b 0%, #2a0d1b 48%, #100710 100%);
+      font-family: Tahoma, sans-serif;
+      padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+    }
+
+    .scene {
+      width: min(100%, 460px);
+      min-height: min(100svh, 600px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 8px;
+    }
+
+    .flower {
+      position: relative;
+      width: 240px;
+      height: 355px;
+    }
+
+    /* ساقه */
+    .stem {
+      position: absolute;
+      z-index: 1;
+      top: 133px;
+      left: 116px;
+      width: 8px;
+      height: 190px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #145324, #58a943 55%, #1d642d);
+      transform: scaleY(0);
+      transform-origin: top;
+      animation: grow-stem 1.8s 1s ease-out forwards;
+    }
+
+    /* برگ‌ها از خود ساقه بیرون می‌آیند */
+    .leaf {
+      position: absolute;
+      z-index: 2;
+      width: 78px;
+      height: 35px;
+      opacity: 0;
+      background: linear-gradient(145deg, #9bd66b 0%, #398d3c 48%, #145526 100%);
+      box-shadow: inset 2px 2px 5px #c0ed8a55, 0 2px 5px #071b0b66;
+    }
+
+    .leaf::after {
+      content: "";
+      position: absolute;
+      width: 88%;
+      height: 1px;
+      top: 50%;
+      right: 4%;
+      background: #c5e99a99;
+      transform: rotate(-8deg);
+      transform-origin: right;
+    }
+
+    .leaf-left {
+      top: 218px;
+      left: 48px;
+      border-radius: 100% 0 100% 0;
+      transform: rotate(12deg) scale(0);
+      transform-origin: right center;
+      animation: leaf-left 1s 2.5s ease-out forwards;
+    }
+
+    .leaf-right {
+      top: 267px;
+      left: 116px;
+      border-radius: 0 100% 0 100%;
+      transform: rotate(12deg) scale(0);
+      transform-origin: left center;
+      animation: leaf-right 1s 2.8s ease-out forwards;
+    }
+
+    /* گل رز */
+    .rose {
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      left: 45px;
+      width: 150px;
+      height: 155px;
+      filter: drop-shadow(0 8px 9px #08030888);
+    }
+
+    .petal {
+      position: absolute;
+      left: 37px;
+      top: 25px;
+      width: 76px;
+      height: 104px;
+      border-radius: 52% 52% 45% 45%;
+      background: linear-gradient(135deg, #ff9aaa 0%, #ed3155 38%, #a6002c 100%);
+      box-shadow: inset -7px -8px 13px #68001e88, inset 5px 4px 10px #ffc0ca66;
+      opacity: 0;
+      transform: rotate(var(--angle)) scale(.08);
+      transform-origin: bottom center;
+      animation: bloom 1.35s cubic-bezier(.2,.8,.25,1.15) forwards;
+      animation-delay: var(--delay);
+    }
+
+    .p1 { --angle: 0deg; --delay: 2s; z-index: 1; }
+    .p2 { --angle: -43deg; --delay: 2.15s; z-index: 2; }
+    .p3 { --angle: 43deg; --delay: 2.3s; z-index: 2; }
+    .p4 { --angle: -78deg; --delay: 2.45s; z-index: 1; }
+    .p5 { --angle: 78deg; --delay: 2.6s; z-index: 1; }
+
+    .p6 {
+      left: 48px;
+      top: 49px;
+      width: 55px;
+      height: 72px;
+      --angle: 0deg;
+      --delay: 2.85s;
+      z-index: 4;
+      background: linear-gradient(135deg, #ffb0bd, #ed1748 65%, #970027);
+    }
+
+    .p7 {
+      left: 57px;
+      top: 61px;
+      width: 38px;
+      height: 52px;
+      --angle: 0deg;
+      --delay: 3.05s;
+      z-index: 5;
+      background: linear-gradient(135deg, #ff9bad, #bd0035);
+    }
+
+    .center {
+      position: absolute;
+      z-index: 6;
+      top: 75px;
+      left: 69px;
+      width: 22px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffb1bd, #a90031);
+      opacity: 0;
+      transform: scale(.1);
+      animation: center-show .7s 3.25s ease-out forwards;
+    }
+
+    .message {
+      margin-top: -2px;
+      color: #fff1f4;
+      font-size: clamp(21px, 6vw, 28px);
+      font-weight: bold;
+      text-align: center;
+      text-shadow: 0 0 9px #ff4164, 0 0 24px #ff174c88;
+      opacity: 0;
+      transform: translateY(22px);
+      animation: message-show 1.2s 4.1s ease-out forwards;
+    }
+
+    .heart {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 27px;
+      animation: heartbeat 1.2s 5.3s infinite;
+    }
+
+    .sparkle {
+      position: absolute;
+      color: #ffd6df;
+      opacity: 0;
+      animation: sparkle 2.8s 4s ease-in-out infinite;
+    }
+    .s1 { top: 55px; left: 24px; font-size: 19px; }
+    .s2 { top: 130px; right: 20px; font-size: 14px; animation-delay: 4.5s; }
+    .s3 { top: 25px; right: 38px; font-size: 16px; animation-delay: 5s; }
+
+    @keyframes grow-stem {
+      to { transform: scaleY(1); }
+    }
+
+    @keyframes leaf-left {
+      to { opacity: 1; transform: rotate(12deg) scale(1); }
+    }
+
+    @keyframes leaf-right {
+      to { opacity: 1; transform: rotate(12deg) scale(1); }
+    }
+
+    @keyframes bloom {
+      0% { opacity: 0; transform: rotate(var(--angle)) scale(.08); }
+      70% { opacity: 1; transform: rotate(var(--angle)) scale(1.08); }
+      100% { opacity: 1; transform: rotate(var(--angle)) scale(1); }
+    }
+
+    @keyframes center-show {
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes message-show {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.25); }
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(.6) rotate(0deg); }
+      50% { opacity: .9; transform: scale(1.2) rotate(35deg); }
+    }
+
+    /* موبایل‌های کوچک */
+    @media (max-width: 380px) {
+      .scene {
+        transform: scale(.88);
+        transform-origin: center center;
+        width: 112%;
+      }
+
+      .message {
+        font-size: 22px;
+      }
+    }
+
+    /* تبلت و صفحه‌های بزرگ‌تر */
+    @media (min-width: 600px) {
+      .scene {
+        transform: scale(1.12);
+      }
+    }
+
+    /* موبایل در حالت افقی یا نمایشگرهای کم‌ارتفاع */
+    @media (max-height: 520px) {
+      body {
+        place-items: start center;
+      }
+
+      .scene {
+        min-height: 500px;
+        transform: scale(.78);
+        transform-origin: top center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-delay: 0ms !important;
+        animation-iteration-count: 1 !important;
+      }
+      .stem { transform: scaleY(1); }
+      .leaf { opacity: 1; }
+      .petal, .center, .message { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="scene">
+    <div class="flower" aria-label="یک گل رز قرمز که باز می‌شود">
+      <span class="sparkle s1">✦</span>
+      <span class="sparkle s2">✧</span>
+      <span class="sparkle s3">✦</span>
+
+      <div class="stem"></div>
+      <div class="leaf leaf-left"></div>
+      <div class="leaf leaf-right"></div>
+
+      <div class="rose">
+        <div class="petal p1"></div>
+        <div class="petal p2"></div>
+        <div class="petal p3"></div>
+        <div class="petal p4"></div>
+        <div class="petal p5"></div>
+        <div class="petal p6"></div>
+        <div class="petal p7"></div>
+        <div class="center"></div>
+      </div>
+    </div>
+
+    <div class="message">
+      ببخشید حسنا جونم
+      <div class="heart">❤️</div>
+    </div>
+  </main>
+</body>
+</html>
